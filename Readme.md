@@ -48,6 +48,6 @@ duranta-online-backend/
 
 ## Authors
 
-- **[Md Hossahin|](https://hossahin.netlify.app/)** – Backend Developer 
+- **[Md Hossahin](https://hossahin.netlify.app/)** – Backend Developer 
 - **[Mehedi Hasan](https://m-hasan.vercel.app/)** –  Contributor
 
