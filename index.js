@@ -83,6 +83,7 @@ async function run() {
       });
     });
 
+    // custom user authentication routes
     app.post("/register", async (req, res) => {
       try {
         const { name, email, password } = req.body;
