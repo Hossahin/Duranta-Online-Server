@@ -160,12 +160,12 @@ async function run() {
       res.send({ success: true, user: req.user });
     });
 
-    app.get("/supporttickets", verifyToken, async (req, res) => {
+    app.get("/supporttickets", async (req, res) => {
       const result = await supportCollection.find().toArray();
       res.send(result);
     });
 
-    app.get("/packages", verifyToken, async (req, res) => {
+    app.get("/packages", async (req, res) => {
       const result = await packageCollection.find().toArray();
       console.log("result", result);
       res.send(result);
