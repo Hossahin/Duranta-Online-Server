@@ -5,7 +5,7 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 
 app.use(cookieParser());
@@ -146,18 +146,38 @@ async function run() {
         });
     });
 
-    app.post("/logout", (req, res) => {
-      res
-        .clearCookie("token", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
-        .send({ success: true, message: "Logged out" });
+    app.put("/supporttickets/:id", async (req, res) => {
+      const { id } = req.params;
+      const { status } = req.body;
+
+      if (!["Open", "Resolved", "Closed"].includes(status)) {
+        return res.status(400).send({
+          success: false,
+          message: "Invalid status value",
+        });
+      }
+
+      const result = await supportCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { status: status } }
+      );
+
+      if (result.matchedCount === 0) {
+        return res.status(404).send({
+          success: false,
+          message: "Support ticket not found",
+        });
+      }
+
+      res.send({
+        success: true,
+        message: "Status updated successfully",
+      });
     });
 
-    app.get("/me", verifyToken, (req, res) => {
-      res.send({ success: true, user: req.user });
+    app.get("/contactus", async (req, res) => {
+      const result = await contactCollection.find().toArray();
+      res.send(result);
     });
 
     app.get("/supporttickets", async (req, res) => {
