@@ -175,6 +175,10 @@ async function run() {
       });
     });
 
+    app.get("/me", verifyToken, (req, res) => {
+      res.send({ success: true, user: req.user });
+    });
+
     app.get("/contactus", async (req, res) => {
       const result = await contactCollection.find().toArray();
       res.send(result);
