@@ -174,6 +174,16 @@ async function run() {
       });
     });
 
+    app.post("/logout", (req, res) => {
+      res
+        .clearCookie("token", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
+        .send({ success: true, message: "Logged out" });
+    });
+
     app.get("/me", verifyToken, async (req, res) => {
       try {
         const userId = req.user.id;
