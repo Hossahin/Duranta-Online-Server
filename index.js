@@ -180,6 +180,16 @@ async function run() {
       res.send({ success: true, user: req.user });
     });
 
+    app.post("/logout", (req, res) => {
+      res
+        .clearCookie("token", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
+        .send({ success: true, message: "Logged out" });
+    });
+
     app.get("/contactus", async (req, res) => {
       const result = await contactCollection.find().toArray();
       res.send(result);
