@@ -20,11 +20,9 @@ app.use(
 // Middleware to verify JWT
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
-
   if (!token) {
     return res.status(401).send({ message: "Unauthorized" });
   }
-
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).send({ message: "Invalid token" });
@@ -176,18 +174,25 @@ async function run() {
       });
     });
 
-    app.get("/me", verifyToken, (req, res) => {
-      res.send({ success: true, user: req.user });
-    });
+    app.get("/me", verifyToken, async (req, res) => {
+      try {
+        const userId = req.user.id;
 
-    app.post("/logout", (req, res) => {
-      res
-        .clearCookie("token", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
-        .send({ success: true, message: "Logged out" });
+        const user = await userCollection.findOne({
+          _id: new ObjectId(userId),
+        });
+
+        if (!user) {
+          return res.status(404).send({ message: "User not found" });
+        }
+
+        res.send({
+          success: true,
+          user,
+        });
+      } catch (error) {
+        res.status(500).send({ message: "Server error" });
+      }
     });
 
     app.get("/contactus", async (req, res) => {
