@@ -105,6 +105,7 @@ async function run() {
           name,
           email,
           password: hashedPassword,
+          role: "user", // admin | user
           createdAt: new Date(),
         };
 
