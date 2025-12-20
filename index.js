@@ -141,7 +141,12 @@ async function run() {
         })
         .send({
           success: true,
-          user: { id: user._id, email: user.email, name: user.name },
+          user: {
+            id: user._id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          },
         });
     });
 
